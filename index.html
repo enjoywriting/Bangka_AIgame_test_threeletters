@@ -1,1 +1,189 @@
-PLACEHOLDER
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>1853：淡水河急信｜vibe coding 示範</title>
+  <style>
+    :root { --ink:#27333a; --paper:#f9f3e7; --red:#bd4b38; --blue:#1e6f83; --gold:#d79b3e; }
+    * { box-sizing:border-box; } body { margin:0; color:var(--ink); background:var(--paper); font-family:ui-rounded, "Noto Sans TC", system-ui, sans-serif; }
+    main { max-width:1040px; margin:auto; padding:24px; } .screen { display:none; } .screen.active { display:block; }
+    .card { max-width:720px; margin:42px auto; padding:30px; border:3px solid var(--ink); border-radius:20px; background:#fffdf8; box-shadow:8px 8px 0 #dfcfae; }
+    h1 { font-size:clamp(2rem,6vw,4rem); margin:.2em 0; line-height:1.05; } h2 { margin-top:0; } .tag { display:inline-block; padding:5px 10px; background:var(--gold); border-radius:99px; font-weight:700; }
+    button { cursor:pointer; border:2px solid var(--ink); border-radius:12px; padding:12px 17px; color:var(--ink); background:#fff; font:inherit; font-weight:800; box-shadow:3px 3px 0 var(--ink); } button:hover { transform:translate(1px,1px); box-shadow:1px 1px 0 var(--ink); } .primary { background:var(--red); color:#fff; }
+    #start.active { min-height:calc(100vh - 48px); display:grid; place-items:center; padding:24px; background:linear-gradient(rgba(15,27,31,.25),rgba(15,27,31,.25)),url('assets/start-background.png') center/cover; border-radius:20px; }
+    #start .card { margin:0; color:#fff; background:rgba(21,31,35,.82); border-color:#fff3d8; box-shadow:8px 8px 0 rgba(38,27,16,.65); }
+    #start .mini { color:#fff; background:rgba(255,255,255,.13); border-left-color:#f3c36b; }
+    #gameover.active { min-height:calc(100vh - 48px); display:grid; place-items:center; padding:24px; background:linear-gradient(rgba(38,20,18,.42),rgba(38,20,18,.42)),url('assets/start-background.png') center/cover; border-radius:20px; }
+    #gameover .card { margin:0; color:#fff; background:rgba(39,25,25,.86); border-color:#fff3d8; box-shadow:8px 8px 0 rgba(38,27,16,.65); }
+    #ending.active { min-height:calc(100vh - 48px); display:grid; place-items:center; padding:24px; background:linear-gradient(rgba(15,38,36,.38),rgba(15,38,36,.38)),url('assets/start-background.png') center/cover; border-radius:20px; }
+    #ending .card { margin:0; color:#fff; background:rgba(21,41,39,.86); border-color:#fff3d8; box-shadow:8px 8px 0 rgba(38,27,16,.65); }
+    #ending .mini { color:#fff; background:rgba(255,255,255,.13); border-left-color:#f3c36b; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:16px; } .asset { padding:16px; border:2px dashed #a88455; border-radius:15px; background:#fff; }
+    input[type=file] { width:100%; margin-top:10px; } small { color:#665; } .actions { display:flex; flex-wrap:wrap; gap:14px; margin-top:24px; }
+    #game-shell { max-width:900px; margin:auto; overflow:hidden; border:3px solid var(--ink); border-radius:20px; background:#fff; box-shadow:8px 8px 0 #dfcfae; }
+    #hud { display:flex; justify-content:space-between; align-items:center; gap:9px; padding:12px 16px; color:#fff5df; background:linear-gradient(180deg,#765035 0%,#553622 100%); border-bottom:5px solid #342116; box-shadow:inset 0 3px 0 rgba(255,238,191,.28), inset 0 -3px 0 rgba(38,22,13,.35); font-weight:800; }
+    #hud span { white-space:nowrap; padding:7px 9px; border:1px solid rgba(255,238,191,.32); border-radius:7px; background:rgba(28,20,13,.28); text-shadow:1px 1px 0 #382315; }
+    #hud button { min-width:106px; color:#3d281b; background:#f3dfb6; border-color:#4b3020; box-shadow:3px 3px 0 #2f1d13; }
+    canvas { display:block; width:100%; height:auto; background:#9bd7e6; } .controls { padding:12px 16px 18px; text-align:center; background:#fff; } kbd { padding:2px 7px; border:1px solid #777; border-bottom-width:3px; border-radius:5px; background:#f4f4f4; }
+    #message { min-height:1.4em; text-align:center; font-weight:800; color:#9e3528; } .story { max-width:680px; margin:20px auto; text-align:center; font-size:1.1rem; }
+    .mini { background:#e9f3ee; border-left:5px solid var(--blue); padding:14px; margin:18px 0; border-radius:0 10px 10px 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <section id="start" class="screen active"><div class="card">
+      <span class="tag">1853 年・艋舺河港</span>
+      <h1>1853：淡水河急信</h1>
+      <p>你是艋舺河港的見習報信人。收集 <b>3 封急信</b>，避開漂流木，把消息送往市街。</p>
+      <p class="mini">淡水河上的風把消息吹得很快。你能安全把急信送到舊市街嗎？</p>
+      <div class="actions"><button class="primary" onclick="showScreen('studio')">打造我的艋舺</button><button onclick="startGame()">出發送信</button></div>
+    </div></section>
+
+    <section id="studio" class="screen"><div class="card">
+      <span class="tag">美術工作室＝素材插槽</span>
+      <h2>把你拍的圖放進遊戲</h2>
+      <p>這三格就是「素材插槽」：程式先預留位置，沒有圖時用預設畫面；有圖時就換成你的圖。</p>
+      <div class="grid">
+        <label class="asset"><b>背景圖</b><br><small>廟埕／河岸／舊市街。最適合橫向照片。</small><input id="bg-upload" type="file" accept="image/*" /></label>
+        <label class="asset"><b>角色圖</b><br><small>AI 生成的透明 PNG 最好；本 demo 也接受一般照片。</small><input id="hero-upload" type="file" accept="image/*" /></label>
+        <label class="asset"><b>道具圖</b><br><small>可放貨箱、信件或招牌。</small><input id="item-upload" type="file" accept="image/*" /></label>
+      </div>
+      <div class="actions"><button onclick="showScreen('start')">返回</button><button class="primary" onclick="startGame()">帶著我的美術開始</button></div>
+    </div></section>
+
+    <section id="game" class="screen"><div class="story" id="level-text">第一關：沿著淡水河收集急信。別撞上漂流木！</div>
+      <div id="game-shell"><div id="hud"><span>✉️ 急信：<b id="score">0</b>/3</span><span>❤️ 生命：<b id="lives">3</b>/3</span><span>⏱️ 時間：<b id="time">45</b></span><button onclick="resetLevel()">重新開始</button></div>
+      <canvas id="canvas" width="900" height="500" aria-label="淡水河遊戲畫面"></canvas><div class="controls">用 <kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd> 移動小船，或直接點畫面移動。</div></div><p id="message"></p>
+    </section>
+
+    <section id="ending" class="screen"><div class="card">
+      <span class="tag">任務完成</span>
+      <h1>急信送達！</h1>
+      <p>你穿越淡水河的急流與漂流木，將三封急信送往艋舺市街。人們得以停下腳步、查證消息、互相提醒。</p>
+      <p class="mini">淡水河仍在流動，而你已成為守護河港的一員。</p>
+      <div class="actions"><button class="primary" onclick="startGame()">再次出航</button><button onclick="showScreen('start')">回到港口</button></div>
+    </div></section>
+
+    <section id="gameover" class="screen"><div class="card">
+      <span class="tag">任務失敗</span>
+      <h1>急信沒有送達</h1>
+      <p>三條生命都用完了。觀察漂流木的路線後，再試一次吧！</p>
+      <div class="actions"><button class="primary" onclick="startGame()">重玩一次</button><button onclick="showScreen('start')">回到開始頁</button></div>
+    </div></section>
+  </main>
+
+  <script>
+    // ====== 1. 共同遊戲狀態：未來三關都使用同一份資料 ======
+    const gameState = { score: 0, lives: 3, time: 45, running: false, dead: false, assets: { bg: null, hero: null, item: null } };
+    const canvas = document.querySelector('#canvas'); const ctx = canvas.getContext('2d'); const RIVER_TOP = 80;
+    const player = { x: 80, y: 250, r: 22, targetX: 80, targetY: 250 };
+    let letters = [], logs = [], timerId, animationId, lastTime = 0, hitCooldown = 0, deathTimer;
+    const imageCache = { bg: null, hero: null, item: null };
+    const defaultHeroImage = new Image(); defaultHeroImage.src = 'assets/player-boat.png';
+    const defaultDriftwoodImage = new Image(); defaultDriftwoodImage.src = 'assets/driftwood.png';
+    const defaultLetterImage = new Image(); defaultLetterImage.src = 'assets/urgent-letter.png';
+    const defaultLevelBackground = new Image();
+    const riverMaskCanvas = document.createElement('canvas'); riverMaskCanvas.width=canvas.width; riverMaskCanvas.height=canvas.height;
+    const riverMaskCtx = riverMaskCanvas.getContext('2d', { willReadFrequently:true });
+    defaultLevelBackground.onload = () => riverMaskCtx.drawImage(defaultLevelBackground,0,0,canvas.width,canvas.height);
+    defaultLevelBackground.src = 'assets/level1-river-background.png';
+
+    function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.querySelector('#' + id).classList.add('active'); }
+    function loadAsset(inputId, name) { const file = document.querySelector(inputId).files[0]; if (!file) return; gameState.assets[name] = URL.createObjectURL(file); const img = new Image(); img.onload = () => imageCache[name] = img; img.src = gameState.assets[name]; }
+    function prepareAssets() { loadAsset('#bg-upload', 'bg'); loadAsset('#hero-upload', 'hero'); loadAsset('#item-upload', 'item'); }
+
+    // ====== 2. 關卡設定：孩子最適合修改的地方 ======
+    function makeLevel() {
+      logs = [
+        {x:340,y:250,w:100,h:24,vx:2.8,vy:1.9,minX:180,maxX:610,minY:130,maxY:380},
+        {x:600,y:100,w:120,h:24,vx:-3.2,vy:2.3,minX:380,maxX:720,minY:80,maxY:310}
+      ];
+      letters = makeRandomLetters(3);
+      player.x = 80; player.y = 250; player.targetX = 80; player.targetY = 250;
+    }
+    function startGame() { prepareAssets(); cancelAnimationFrame(animationId); clearInterval(timerId); clearTimeout(deathTimer); gameState.score=0; gameState.lives=3; gameState.time=45; gameState.dead=false; hitCooldown=0; gameState.running=true; makeLevel(); updateHud(); document.querySelector('#message').textContent=''; showScreen('game'); timerId=setInterval(tick,1000); lastTime=performance.now(); animationId=requestAnimationFrame(loop); }
+    function tick() { if (!gameState.running) return; gameState.time--; updateHud(); if (gameState.time <= 0) { gameState.running=false; clearInterval(timerId); document.querySelector('#message').textContent='時間到了！按「重新開始」再試一次。'; } }
+    function resetLevel() { startGame(); }
+    function updateHud() { document.querySelector('#score').textContent=gameState.score; document.querySelector('#lives').textContent=gameState.lives; document.querySelector('#time').textContent=gameState.time; }
+
+    // ====== 3. 遊戲規則：移動、碰撞、得分、成功 ======
+    const keys = {}; addEventListener('keydown', e => keys[e.key]=true); addEventListener('keyup', e => keys[e.key]=false);
+    canvas.addEventListener('pointerdown', e => { const r=canvas.getBoundingClientRect(); player.targetX=(e.clientX-r.left)*canvas.width/r.width; player.targetY=(e.clientY-r.top)*canvas.height/r.height; });
+    function loop(now) { const dt=Math.min((now-lastTime)/16.67,2); lastTime=now; if(gameState.running) update(dt); draw(); animationId=requestAnimationFrame(loop); }
+    function isBlueRiver(x,y) {
+      if (imageCache.bg || !defaultLevelBackground.complete || !defaultLevelBackground.naturalWidth) return y >= RIVER_TOP + player.r;
+      const samples=[[0,0],[-16,0],[16,0],[0,-16],[0,16]];
+      return samples.every(([dx,dy]) => {
+        const [r,g,b] = riverMaskCtx.getImageData(Math.round(x+dx),Math.round(y+dy),1,1).data;
+        const max=Math.max(r,g,b), min=Math.min(r,g,b), delta=max-min;
+        if (!delta || !max) return false;
+        let hue;
+        if (max===r) hue=60*((g-b)/delta%6); else if (max===g) hue=60*((b-r)/delta+2); else hue=60*((r-g)/delta+4);
+        if (hue<0) hue+=360;
+        return hue>=175 && hue<=225 && delta/max>=0.18 && max/255>=0.35;
+      });
+    }
+    function makeRandomLetters(count) {
+      const points=[];
+      for (let i=0; i<count; i++) {
+        for (let attempt=0; attempt<500; attempt++) {
+          const x=180+Math.random()*500, y=160+Math.random()*260;
+          const clearOfLogs=!logs.some(log => x>log.x-45 && x<log.x+log.w+45 && y>log.y-45 && y<log.y+log.h+45);
+          const clearOfLetters=!points.some(point => Math.hypot(x-point.x,y-point.y)<105);
+          const clearOfStart=Math.hypot(x-80,y-250)>95;
+          if (isBlueRiver(x,y) && clearOfLogs && clearOfLetters && clearOfStart) { points.push({x,y}); break; }
+        }
+      }
+      return points.length===count ? points : [{x:340,y:330},{x:500,y:250},{x:650,y:380}];
+    }
+    function update(dt) {
+      hitCooldown = Math.max(0, hitCooldown - dt);
+      const speed=4.2*dt; if(keys.ArrowLeft) player.targetX-=speed*2; if(keys.ArrowRight) player.targetX+=speed*2; if(keys.ArrowUp) player.targetY-=speed*2; if(keys.ArrowDown) player.targetY+=speed*2;
+      const nextX=Math.max(player.r,Math.min(canvas.width-player.r,player.x+(player.targetX-player.x)*0.1*dt));
+      const nextY=Math.max(RIVER_TOP+player.r,Math.min(canvas.height-player.r,player.y+(player.targetY-player.y)*0.1*dt));
+      if (isBlueRiver(nextX,nextY)) { player.x=nextX; player.y=nextY; }
+      else {
+        if (isBlueRiver(nextX,player.y)) player.x=nextX;
+        if (isBlueRiver(player.x,nextY)) player.y=nextY;
+      }
+      for (const log of logs) {
+        log.x += log.vx * dt;
+        if (log.x <= log.minX || log.x >= log.maxX) {
+          log.x = Math.max(log.minX, Math.min(log.maxX, log.x));
+          log.vx *= -1;
+        }
+        log.y += log.vy * dt;
+        if (log.y <= log.minY || log.y >= log.maxY) {
+          log.y = Math.max(log.minY, Math.min(log.maxY, log.y));
+          log.vy *= -1;
+        }
+      }
+      letters = letters.filter(letter => { if(Math.hypot(player.x-letter.x,player.y-letter.y)<player.r+18) { gameState.score++; updateHud(); return false; } return true; });
+      for(const log of logs) if(player.x+player.r>log.x && player.x-player.r<log.x+log.w && player.y+player.r>log.y && player.y-player.r<log.y+log.h && hitCooldown===0 && gameState.lives>0) {
+        gameState.lives--; hitCooldown=60; gameState.dead=true; gameState.running=false; updateHud();
+        document.querySelector('#message').textContent='撞到漂流木！少了一條生命。';
+        deathTimer=setTimeout(() => {
+          gameState.dead=false;
+          if (gameState.lives === 0) { clearInterval(timerId); showScreen('gameover'); return; }
+          player.x=80; player.y=250; player.targetX=80; player.targetY=250; gameState.running=true; document.querySelector('#message').textContent=''; lastTime=performance.now();
+        }, 500);
+      }
+      if(gameState.score===3) { gameState.running=false; clearInterval(timerId); setTimeout(()=>showScreen('ending'),500); }
+    }
+    // ====== 4. 畫面：素材插槽有圖就畫圖，沒有就畫預設圖形 ======
+    function draw() { ctx.clearRect(0,0,canvas.width,canvas.height); drawBackground(); logs.forEach(drawLog); letters.forEach(drawLetter); drawPlayer(); if (gameState.dead) drawImpact(); }
+    function drawBackground() {
+      if (imageCache.bg) { ctx.globalAlpha=.78; ctx.drawImage(imageCache.bg,0,0,canvas.width,canvas.height); ctx.globalAlpha=1; return; }
+      if (defaultLevelBackground.complete && defaultLevelBackground.naturalWidth) { ctx.drawImage(defaultLevelBackground,0,0,canvas.width,canvas.height); return; }
+      ctx.fillStyle='#89cfde'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      for(let x=0;x<900;x+=80){ctx.strokeStyle='rgba(255,255,255,.35)';ctx.beginPath();ctx.arc(x,300,40,0,Math.PI);ctx.stroke();}
+      ctx.fillStyle='#e4bd7e';ctx.fillRect(0,0,900,55);ctx.fillStyle='#486f54';ctx.fillRect(0,55,900,25);
+    }
+    function drawLetter(o) { const letterImage=imageCache.item || defaultLetterImage; if(letterImage.complete && letterImage.naturalWidth) ctx.drawImage(letterImage,o.x-21,o.y-16,42,32); else { ctx.fillStyle='#fff7db';ctx.fillRect(o.x-18,o.y-13,36,26);ctx.strokeStyle='#9e5740';ctx.strokeRect(o.x-18,o.y-13,36,26);ctx.fillStyle='#9e5740';ctx.font='14px sans-serif';ctx.fillText('信',o.x-6,o.y+5); } }
+    function drawLog(o) { if(defaultDriftwoodImage.complete && defaultDriftwoodImage.naturalWidth) ctx.drawImage(defaultDriftwoodImage,o.x,o.y,o.w,o.h); else { ctx.fillStyle='#754c33';ctx.fillRect(o.x,o.y,o.w,o.h);ctx.fillStyle='#a9774b';ctx.fillRect(o.x+8,o.y+4,o.w-16,5); } }
+    function drawPlayer() { const heroImage=imageCache.hero || defaultHeroImage; if(heroImage.complete && heroImage.naturalWidth) ctx.drawImage(heroImage,player.x-34,player.y-34,68,68); else { ctx.fillStyle='#c8503d';ctx.beginPath();ctx.ellipse(player.x,player.y,27,13,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#fff5d8';ctx.fillRect(player.x-7,player.y-26,14,22);ctx.fillStyle='#27333a';ctx.fillRect(player.x-10,player.y-31,20,7); } }
+    function drawImpact() { ctx.fillStyle='rgba(190,35,35,.66)'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle='#fff5e5'; ctx.font='bold 46px sans-serif'; ctx.textAlign='center'; ctx.fillText('撞擊！',canvas.width/2,canvas.height/2); ctx.textAlign='start'; }
+  </script>
+</body>
+</html>
