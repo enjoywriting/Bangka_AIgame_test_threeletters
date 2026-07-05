@@ -11,12 +11,12 @@
     .card { max-width:720px; margin:42px auto; padding:30px; border:3px solid var(--ink); border-radius:20px; background:#fffdf8; box-shadow:8px 8px 0 #dfcfae; }
     h1 { font-size:clamp(2rem,6vw,4rem); margin:.2em 0; line-height:1.05; } h2 { margin-top:0; } .tag { display:inline-block; padding:5px 10px; background:var(--gold); border-radius:99px; font-weight:700; }
     button { cursor:pointer; border:2px solid var(--ink); border-radius:12px; padding:12px 17px; color:var(--ink); background:#fff; font:inherit; font-weight:800; box-shadow:3px 3px 0 var(--ink); } button:hover { transform:translate(1px,1px); box-shadow:1px 1px 0 var(--ink); } .primary { background:var(--red); color:#fff; }
-    #start.active { min-height:calc(100vh - 48px); display:grid; place-items:center; padding:24px; background:linear-gradient(rgba(15,27,31,.25),rgba(15,27,31,.25)),url('assets/start-background.png') center/cover; border-radius:20px; }
+    #start.active { min-height:calc(100vh - 48px); display:grid; place-items:center; padding:24px; background:linear-gradient(rgba(15,27,31,.25),rgba(15,27,31,.25)),url('assets/start-background.jpg') center/cover; border-radius:20px; }
     #start .card { margin:0; color:#fff; background:rgba(21,31,35,.82); border-color:#fff3d8; box-shadow:8px 8px 0 rgba(38,27,16,.65); }
     #start .mini { color:#fff; background:rgba(255,255,255,.13); border-left-color:#f3c36b; }
-    #gameover.active { min-height:calc(100vh - 48px); display:grid; place-items:center; padding:24px; background:linear-gradient(rgba(38,20,18,.42),rgba(38,20,18,.42)),url('assets/start-background.png') center/cover; border-radius:20px; }
+    #gameover.active { min-height:calc(100vh - 48px); display:grid; place-items:center; padding:24px; background:linear-gradient(rgba(38,20,18,.42),rgba(38,20,18,.42)),url('assets/start-background.jpg') center/cover; border-radius:20px; }
     #gameover .card { margin:0; color:#fff; background:rgba(39,25,25,.86); border-color:#fff3d8; box-shadow:8px 8px 0 rgba(38,27,16,.65); }
-    #ending.active { min-height:calc(100vh - 48px); display:grid; place-items:center; padding:24px; background:linear-gradient(rgba(15,38,36,.38),rgba(15,38,36,.38)),url('assets/start-background.png') center/cover; border-radius:20px; }
+    #ending.active { min-height:calc(100vh - 48px); display:grid; place-items:center; padding:24px; background:linear-gradient(rgba(15,38,36,.38),rgba(15,38,36,.38)),url('assets/start-background.jpg') center/cover; border-radius:20px; }
     #ending .card { margin:0; color:#fff; background:rgba(21,41,39,.86); border-color:#fff3d8; box-shadow:8px 8px 0 rgba(38,27,16,.65); }
     #ending .mini { color:#fff; background:rgba(255,255,255,.13); border-left-color:#f3c36b; }
     .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:16px; } .asset { padding:16px; border:2px dashed #a88455; border-radius:15px; background:#fff; }
@@ -87,7 +87,7 @@
     const riverMaskCanvas = document.createElement('canvas'); riverMaskCanvas.width=canvas.width; riverMaskCanvas.height=canvas.height;
     const riverMaskCtx = riverMaskCanvas.getContext('2d', { willReadFrequently:true });
     defaultLevelBackground.onload = () => riverMaskCtx.drawImage(defaultLevelBackground,0,0,canvas.width,canvas.height);
-    defaultLevelBackground.src = 'assets/level1-river-background.png';
+    defaultLevelBackground.src = 'assets/level1-river-background.jpg';
 
     function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.querySelector('#' + id).classList.add('active'); }
     function loadAsset(inputId, name) { const file = document.querySelector(inputId).files[0]; if (!file) return; gameState.assets[name] = URL.createObjectURL(file); const img = new Image(); img.onload = () => imageCache[name] = img; img.src = gameState.assets[name]; }
